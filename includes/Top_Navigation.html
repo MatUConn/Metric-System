@@ -1,0 +1,100 @@
+<div class="top_nav">
+  <div class="nav_menu">
+	<nav>
+	  <div class="nav toggle">
+		<a id="menu_toggle"><i class="fa fa-bars"></i></a>
+	  </div>
+	  <ul class="nav navbar-nav navbar-right">
+		<li class="">
+		  <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+		  <?php
+			if ($UserInfo[3] == NULL){
+				echo '<img src="images/Avatars/Default.jpg" alt="">' . $Username . '';
+			}
+			else {
+				echo '<img src="images/Avatars/' . $UserID . '.jpg" alt="">' . $Username . '';
+			}
+			?>
+			<span class=" fa fa-angle-down"></span>
+		  </a>
+		  <ul class="dropdown-menu dropdown-usermenu pull-right"><!--
+		  <?php
+		  echo'<li><a href="Profile.php?Profile_ID=' . $UserID . '">';
+		  ?>
+				<span class="badge bg-red pull-right">50%</span>
+				<span>Profile</span>
+			</a></li>-->
+          <li><a href="user_login.php?action=logout"><i class="fa fa-sign-out pull-right"></i> Log Out</a></li>
+          </ul>
+		</li>
+		
+		<li role="presentation" class="dropdown">
+		  <a href="javascript:;" class="dropdown-toggle info-number" data-toggle="dropdown" aria-expanded="false">
+			<i class="fa fa-envelope-o"></i>
+			<?php
+			$Q_Get_Message_Info = "SELECT COUNT(*)
+									FROM Messages m
+									JOIN Message_Recipients mr ON mr.Message_ID = m.Message_ID
+									WHERE m.Completed = 0
+									AND m.Message_Type = 'Task'
+									AND mr.Recipient_ID = $UserID";
+			$R_Get_Message_Info = $mysqli->query($Q_Get_Message_Info);
+			$MessageInfo = $R_Get_Message_Info->fetch_array(MYSQLI_NUM);
+			$MessageCount = $MessageInfo[0];
+			echo'<span class="badge bg-green">' . $MessageCount . '</span>';
+			?>
+		  </a>
+		  <ul id="menu1" class="dropdown-menu list-unstyled msg_list" role="menu">
+		  <?php
+		  $Q_Get_Tasks = "SELECT m.Message_ID, m.Message, CONCAT(u.first_name, ' ', u.last_name), u.Avatar, u.user_id, TIMESTAMPDIFF(DAY, m.Create_Date, NOW())
+							FROM Messages m
+							JOIN Message_Recipients mr ON (m.Message_ID = mr.Message_ID)
+							JOIN user u ON (u.user_id = m.Author_ID)
+							WHERE m.Message_Type = 'Task'
+							AND m.Completed = 0
+							AND mr.Recipient_ID = '$UserID'
+							ORDER BY m.Create_Date DESC
+							LIMIT 3";
+			$R_Get_Tasks = $mysqli->query($Q_Get_Tasks);
+		  while($Recent_Tasks = $R_Get_Tasks->fetch_array(MYSQLI_NUM)) {
+		  echo'
+			<li>
+			  <a href="Tasks.php?Task_ID=' . $Recent_Tasks[0] . '">';
+				if($Recent_Tasks[3] == 1){
+					echo'<span class="image"><img src="images/Avatars/' . $Recent_Tasks[4] . '.jpg" alt="Profile Image" /></span>';
+				}
+				else {
+					echo'<span class="image"><img src="images/Avatars/Default.jpg" alt="Profile Image" /></span>';
+				}
+				echo'<span>
+				  <span>' . $Recent_Tasks[2] . '</span>';
+				  if ($Recent_Tasks[5] <= 0){
+					echo'<span class="time">Today</span>';
+				  }
+				  else {
+					echo'<span class="time">' . $Recent_Tasks[5] . ' day(s) ago</span>';
+				  }
+				  echo'
+				</span>
+				<span class="message">
+					' . $Recent_Tasks[1] . '
+				</span>
+			  </a>
+			</li>';
+		}
+		?>
+			<li>
+			  <div class="text-center">
+				<a href="Tasks.php">
+				  <strong>See All Tasks</strong>
+				  <i class="fa fa-angle-right"></i>
+				</a>
+			  </div>
+			</li>
+		  </ul>
+		</li>
+		
+	  </ul>
+	</nav>
+  </div>
+</div>
