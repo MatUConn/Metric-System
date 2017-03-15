@@ -9,21 +9,25 @@ $PID = $mysqli->real_escape_string(trim($_POST['Project']));
 $UserID = $mysqli->real_escape_string(trim($_POST['UserID']));
 $Recipient_ID = $mysqli->real_escape_string(trim($_POST['Recipient']));
 $MCode = $mysqli->real_escape_string(trim($_POST['MCode']));
-
-//Getting the Salesperson
-$q_get_user_info = "SELECT C.first_name, C.last_name
-							FROM contact C
-							JOIN project P ON (P.salesperson_id = C.contact_id)
-							WHERE P.project_ID = $PID";
-$r_get_user_info = $mysqli->query($q_get_user_info);
-$SalespersonInfo = $r_get_user_info->fetch_array(MYSQLI_NUM);
-$Username = $SalespersonInfo[0] . ' ' . $SalespersonInfo[1];
 	
 if ($MCode == 2){
+    //Getting the project name, salesperson, and salespersons email
+    $Q_Get_Salesperson = "SELECT p.project_name, c.first_name AS Salesperson, CONCAT(SUBSTRING(c.first_name,1,1), c.last_name, '@energyresourcesusa.net') AS SalespersonEmail
+                            FROM project p
+                            LEFT JOIN contact c ON (p.salesperson_id = c.contact_id)
+                            WHERE p.project_ID = $PID";
+    $R_Get_Salesperson = $mysqli->query($Q_Get_Salesperson);
+    $SalespersonInfo = $R_Get_Salesperson->fetch_array(MYSQLI_ASSOC);
+    $SalespersonEmail = $SalespersonInfo['SalespersonEmail'];
+    $Subject = 'Your proposal for project ' . $SalespersonInfo['project_name'] . ' is ready';
+    $EmailBody = $SalespersonInfo['Salesperson'] . ", \r\n" . $Message;
+    
 	$headers = 'From: MetricSystem@jkenergysolutions.net' . "\r\n" .
    'Reply-To: MetricSystem@jkenergysolutions.net' . "\r\n" .
    'X-Mailer: PHP/' . phpversion();
-	mail('mfox@energyresourcesusa.net', 'A New Task', $Message, $headers, '-freturn@jkenergysolutions.net');
+	mail($SalespersonEmail, $Subject, $EmailBody, $headers, '-freturn@jkenergysolutions.net');
+    //I'm keeping these emails being sent to me for debugging ONLY
+    mail('mfox@energyresourcesusa.net', $Subject, $EmailBody, $headers, '-freturn@jkenergysolutions.net');
 } 
 else {
 	$Q_AddTask = "INSERT INTO Messages (Message, Author_ID, Project_ID, Message_Type, MCode, Completed)
