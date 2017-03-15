@@ -28,7 +28,7 @@ $client->setApplicationName(GOOGLE_APPLICATION_NAME);
 $client->setClientId(GOOGLE_CLIENT_ID);
 $client->setClientSecret(GOOGLE_CLIENT_SECRET);
 $protocol = (isset($_SERVER['HTTPS'])) ? 'https' : 'http'; 
-$client->setRedirectUri($protocol . '://metric.jkenergysolutions.net/user_login.php');
+$client->setRedirectUri($protocol . '://metrictest.jkenergysolutions.net/user_login.php');
 // $client->setDeveloperKey('insert_your_developer_key');
 // set auto approval - uses auto approval of user scope prompt
 $client->setApprovalPrompt('auto');
