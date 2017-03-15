@@ -21,10 +21,9 @@ else { //an invalid project id was provided, kill script
 }
 //Salesperson Queries
 $q_get_salespersons = "SELECT contact_id, CONCAT(first_name, ' ', last_name) AS 'full_name',
-		CONCAT('(', SUBSTRING(phone_num, 1, 3), ') ', SUBSTRING(phone_num, 4, 3), '-', SUBSTRING(phone_num, 7, 4)) AS 'formatted_phone'
+		CONCAT('(', SUBSTRING(phone_num, 1, 3), ') ', SUBSTRING(phone_num, 4, 3), '-', SUBSTRING(phone_num, 7, 4)) AS 'formatted_phone', Inactive
 		FROM contact
 		WHERE role = 'Salesperson'
-		AND Inactive = '0'
 		ORDER BY first_name";
 $rslt_salespersons = $mysqli->query($q_get_salespersons);
 //Project Manager Queries
@@ -462,14 +461,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 								<?php
 								while($row_salesperson = $rslt_salespersons->fetch_array(MYSQLI_NUM)){
 									if ($row['salesperson_id']==$row_salesperson[0]) {
-										echo "\t"; //add tab to html source
 										echo '<option value="'. $row_salesperson[0] .'" selected="selected">' . $row_salesperson[1] . '</option>';
-										echo "\n"; // add line break to html source
 									}
+                                    //If the salesperson is Inactive, hide them from the list
+                                    else if ($row_salesperson[3] == 1) {
+										echo '<option hidden value="' . $row_salesperson[0] . '">' . $row_salesperson[1] . '</option>';
+									}
+                                    //If the salesperson is not the selected one, and they are not Inactive, just show them normally
 									else {
-										echo "\t"; //add tab to html source
 										echo '<option value="' . $row_salesperson[0] . '">' . $row_salesperson[1] . '</option>';
-										echo "\n"; // add line break to html source
 									}
 								}
 								?>
@@ -2056,7 +2056,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 									<h4 class="modal-title" id="myModalLabel2">Assign Task</h4>
 								</div>
 								<div class="modal-body">
-									<h4>Assign Task To:</h4>
+									<h4 id="TTitle">Assign Task To:</h4>
 									<select id="TaskUser" class="form-control" tabindex="-1">
 										<?php
 											while($Row_Users = $R_Users->fetch_array(MYSQLI_ASSOC)){
@@ -2069,7 +2069,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 											}
 										?>
 									</select>
-									<h4>Task Comment: </h4><h5 id="TText"></h5>
+									<h4>Comment: </h4><h5 id="TText"></h5>
 									<input id="CommentInput" class="form-control col-md-6 col-xs-12" placeholder="Additional Comment (Optional)">
 								</div>
 								<br/><br/>
@@ -2203,7 +2203,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	  function validateSteps(stepnumber){
         // validate step 1
         if(stepnumber == 1){
-			TaskText = "Present proposal to customer.  ";
+			TaskText = "The proposal for this project is ready.  ";
+            Salesperson = $('#Salesperson option:selected').html()
+            $('#TTitle').text("An email will be sent to: " + Salesperson);
+            $('#TaskUser').hide();
 			MCode = 2;
 			RequiredCheck("ProjectName", "Project Name");
 			RequiredCheck("Address", "Primary Address");
@@ -2250,6 +2253,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
 		if(stepnumber == 2){
 			TaskText = "Prepare project for production.  ";
+            //Setting the title back to normal
+            $('#TTitle').text("Assign Task To:");
+            //Displaying the select again
+            $('#TaskUser').show();
 			MCode = 3;
 			RequiredCheck("DateSigned", "Date Signed");
 			LockButton();
