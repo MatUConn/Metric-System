@@ -182,7 +182,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 		
         $q_get_project = "SELECT project_name, business_name, program, program_id, project_status, DeadBool, address1, address2, city, state, zip, 
 			Project_Cost, KWH_Savings, Incentive, Financing, FinanceType, FinanceAmount, FinanceTerm, Comprehensive, Tax_Exempt, ExemptionType, 
-			HeatingFuelType, FacilityType, ElectricBillAcct, date(DateSigned) AS DateSigned, date(UtilityApprovalDate) AS UtilityApprovalDate, 
+			HeatingFuelType, FacilityType, ElectricBillAcct, date(DateSigned) AS DateSigned, date(UtilitiesApprovalRequest) AS UtilitiesApprovalRequest, date(UtilityApprovalDate) AS UtilityApprovalDate, 
 			date(PMWalkDate) AS PMWalkDate, date(MaterialsOrderedDate) AS MaterialsOrderedDate, date(InstallDate) AS InstallDate, PMChanges, 
 			date(SignedFinalsRecieved) AS SignedFinalsRecieved, ValueChanged, date(PaidDate) AS PaidDate, contact_name, contact_phone, contact_email, 
 			Installation_Contact_Name, Installation_Contact_Phone, salesperson_id, pm_id
@@ -683,7 +683,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                           </select>
                         </div>
                       </div>
-					  
+						<div class="item form-group">
+						<label class="control-label col-md-3 col-sm-3 col-xs-12">Utility Approval Requested</label>
+							<div class="col-md-6 col-sm-6 col-xs-12">
+							<?php
+								echo'<input autocomplete="off" type="text" id="UtilitiesApprovalRequest" name="UtilitiesApprovalRequest" placeholder="yyyy/mm/dd" class="form-control" value="' . $row['UtilitiesApprovalRequest'] . '" data-inputmask="\'mask\': \'9999/99/99\'">';
+							?>
+							</div>
+						</div>
+						<div class="item form-group">
+						<label class="control-label col-md-3 col-sm-3 col-xs-12">Utility Approval Date</label>
+							<div class="col-md-6 col-sm-6 col-xs-12">
+							<?php
+								echo'<input autocomplete="off" type="text" id="UtilityApprovalDate" name="UtilityApprovalDate" placeholder="yyyy/mm/dd" class="form-control" value="' . $row['UtilityApprovalDate'] . '" data-inputmask="\'mask\': \'9999/99/99\'">';
+							?>
+							</div>
+						</div>
                         </form>
 
                       </div>
@@ -935,6 +950,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 							?>
 							</div>
 						</div>
+						<div class="item form-group">
+						<label class="control-label col-md-3 col-sm-3 col-xs-12">Utility Approval Requested</label>
+							<div class="col-md-6 col-sm-6 col-xs-12">
+							<?php
+								echo'<input autocomplete="off" type="text" id="UtilitiesApprovalRequest" name="UtilitiesApprovalRequest" placeholder="yyyy/mm/dd" class="form-control" value="' . $row['UtilitiesApprovalRequest'] . '" data-inputmask="\'mask\': \'9999/99/99\'">';
+							?>
+							</div>
+						</div>
+						<div class="item form-group">
+						<label class="control-label col-md-3 col-sm-3 col-xs-12">Utility Approval Date</label>
+							<div class="col-md-6 col-sm-6 col-xs-12">
+							<?php
+								echo'<input autocomplete="off" type="text" id="UtilityApprovalDate" name="UtilityApprovalDate" placeholder="yyyy/mm/dd" class="form-control" value="' . $row['UtilityApprovalDate'] . '" data-inputmask="\'mask\': \'9999/99/99\'">';
+							?>
+							</div>
+						</div>
                         </form>
 
                       </div>
@@ -1152,6 +1183,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 						</div>
 						<span class="section"></span><!--New content for this state-->
 						<div class="item form-group">
+						<label class="control-label col-md-3 col-sm-3 col-xs-12">Utility Approval Requested<span class="required">*</span></label>
+							<div class="col-md-6 col-sm-6 col-xs-12">
+							<?php
+								echo'<input autocomplete="off" type="text" id="UtilitiesApprovalRequest" name="UtilitiesApprovalRequest" placeholder="yyyy/mm/dd" class="form-control" value="' . $row['UtilitiesApprovalRequest'] . '" data-inputmask="\'mask\': \'9999/99/99\'">';
+							?>
+							</div>
+						</div>
+						<div class="item form-group">
 						<label class="control-label col-md-3 col-sm-3 col-xs-12">Utility Approval Date<span class="required">*</span></label>
 							<div class="col-md-6 col-sm-6 col-xs-12">
 							<?php
@@ -1361,13 +1400,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 						</div>
 						<div class="item form-group">
 							<div class="col-md-2 col-sm-2 col-xs-4"></div><!--Placeholder for formatting-->
+							<div class="col-md-4 col-sm-4 col-xs-6">
 							<?php
-							echo'<div class="col-md-8 col-sm-8 col-xs-12">
-							Salesperson: ' . $Salesperson[0] . '</div>';
+							echo'Salesperson: ' . $Salesperson[0] . '';
 							?>
-						</div>
-						<div class="item form-group">
-						<div class="col-md-2 col-sm-2 col-xs-4"></div><!--Placeholder for formatting-->
+							</div>
 							<div class="col-md-4 col-sm-4 col-xs-6">
 							<?php
 							echo'Signed On: ' . $row['DateSigned'] . '';
@@ -1376,7 +1413,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 						</div>
 						<div class="item form-group">
 						<div class="col-md-2 col-sm-2 col-xs-4"></div><!--Placeholder for formatting-->
-							<div class="col-md-8 col-sm-8 col-xs-12">
+							<div class="col-md-4 col-sm-4 col-xs-6">
+							<?php
+							echo'Utility Approval Requested On: ' . $row['UtilitiesApprovalRequest'] . '';
+							?>
+							</div>
+							<div class="col-md-4 col-sm-4 col-xs-6">
 							<?php
 							echo'Utility Approval On: ' . $row['UtilityApprovalDate'] . '';
 							?>
@@ -1683,18 +1725,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 						<div class="col-md-2 col-sm-2 col-xs-4"></div><!--Placeholder for formatting-->
 							<div class="col-md-4 col-sm-4 col-xs-6">
 							<?php
+							echo'Utility Approval Requested On: ' . $row['UtilitiesApprovalRequest'] . '';
+							?>
+							</div>
+							<div class="col-md-4 col-sm-4 col-xs-6">
+							<?php
 							echo'Utility Approval On: ' . $row['UtilityApprovalDate'] . '';
 							?>
 							</div>
+						</div>
+						<div class="item form-group">
+							<div class="col-md-2 col-sm-2 col-xs-4"></div><!--Placeholder for formatting-->
 							<div class="col-md-4 col-sm-4 col-xs-6">
 							<?php
 							echo'Materials Ordered On: ' . $row['MaterialsOrderedDate'] . '';
 							?>
 							</div>
-						</div>
-						<div class="item form-group">
-						<div class="col-md-2 col-sm-2 col-xs-4"></div><!--Placeholder for formatting-->
-							<div class="col-md-8 col-sm-8 col-xs-12">
+							<div class="col-md-4 col-sm-4 col-xs-6">
 							<?php
 							echo'Scheduled Install Date: ' . $row['InstallDate'] . '';
 							?>
@@ -1952,12 +1999,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 						<div class="col-md-2 col-sm-2 col-xs-4"></div><!--Placeholder for formatting-->
 							<div class="col-md-4 col-sm-4 col-xs-6">
 							<?php
-							echo'Utility Approval On: ' . $row['UtilityApprovalDate'] . '';
+							echo'Utility Approval Requested On: ' . $row['UtilitiesApprovalRequest'] . '';
 							?>
 							</div>
 							<div class="col-md-4 col-sm-4 col-xs-6">
 							<?php
-							echo'Materials Ordered On: ' . $row['MaterialsOrderedDate'] . '';
+							echo'Utility Approval On: ' . $row['UtilityApprovalDate'] . '';
 							?>
 							</div>
 						</div>
@@ -1965,9 +2012,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 						<div class="col-md-2 col-sm-2 col-xs-4"></div><!--Placeholder for formatting-->
 							<div class="col-md-4 col-sm-4 col-xs-6">
 							<?php
+							echo'Materials Ordered On: ' . $row['MaterialsOrderedDate'] . '';
+							?>
+							</div>
+							<div class="col-md-4 col-sm-4 col-xs-6">
+							<?php
 							echo'Scheduled Install Date: ' . $row['InstallDate'] . '';
 							?>
 							</div>
+						</div>
+						<div class="item form-group">
+							<div class="col-md-2 col-sm-2 col-xs-4"></div><!--Placeholder for formatting-->
 							<div class="col-md-4 col-sm-4 col-xs-6">
 							<?php
 							echo'Signed Finals Received: ' . $row['SignedFinalsRecieved'] . '';
@@ -2148,7 +2203,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	  function validateSteps(stepnumber){
         // validate step 1
         if(stepnumber == 1){
-			TaskText = "Follow up with seller regarding project signature.  ";
+			TaskText = "Present proposal to customer.  ";
 			MCode = 2;
 			RequiredCheck("ProjectName", "Project Name");
 			RequiredCheck("Address", "Primary Address");
@@ -2205,6 +2260,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 		if(stepnumber == 3){
 			TaskText = "Complete project production.  ";
 			MCode = 4;
+			RequiredCheck("UtilitiesApprovalRequest", "Utility Approval Requested");
 			RequiredCheck("UtilityApprovalDate", "Utility Approval Date");
 			LockButton();
           // Your step validation logic

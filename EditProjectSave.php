@@ -87,6 +87,10 @@ switch ($ID) {
         $ColumnName = "ElectricBillAcct";
 		$Query = "PA";
         break;
+	case UtilitiesApprovalRequest:
+        $ColumnName = "UtilitiesApprovalRequest";
+		$Query = "PA";
+        break;
 	case SquareFootage:
         $ColumnName = "area_sqft";
 		$Query = "AA";
@@ -110,6 +114,9 @@ switch ($ID) {
 	case Comprehensive:
         $ColumnName = "Comprehensive";
 		$Query = "PN";
+        break;
+	case ComprehensiveList:
+		$Query = "CI";
         break;
 	case TaxExempt:
         $ColumnName = "Tax_Exempt";
@@ -221,6 +228,10 @@ switch ($Query) {
 				SET $DateColumn = '$CurrentDate', project_status = '$PStatus', LastChanged = '$CurrentDate'
 				WHERE project_ID = $PID
 				LIMIT 1";
+        break;
+	case CI:
+		$Q_Update_Info = "INSERT INTO ComprehensiveItems (Project_ID, Item_ID) 
+						VALUES('$PID', '$Content')";
         break;
 }
 $mysqli->query($Q_Update_Info);
