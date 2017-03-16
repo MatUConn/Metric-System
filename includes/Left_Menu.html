@@ -1,4 +1,4 @@
-<div class="col-md-3 left_col menu_fixed">
+<div class="col-md-3 left_col">
           <div class="left_col scroll-view">
             <div class="navbar nav_title" style="border: 0;">
               <a href="index.php" class="site_title"><span>Metric System</span></a>
@@ -50,17 +50,30 @@
 				  <li><a href="Tasks.php"><i class="fa fa-tasks"></i>Tasks</a></li>-->
                 </ul>
               </div>
+                <?php
+                if ($UserInfo[2] == "Administrator"){
+					echo'
+                    <div class="menu_section">
+                    <h3>Administrative</h3>
+                        <ul class="nav side-menu">
+                            <!--<li><a href="https://sow.jkenergysolutions.net/"><i class="fa fa-briefcase"></i> Owners Page </a></li>-->
+                            <li><a href="Admin.php"><i class="fa fa-users"></i> Administration </a></li>    
+                        </ul>
+                    </div>
+                    ';
+				}
+                ?>
 			  <div class="menu_section">
                 <h3>Other Sites</h3>
                 <ul class="nav side-menu">
-                  <li><a href="https://sow.jkenergysolutions.net/" target="_blank"><i class="fa fa-clipboard"></i> SOW </a>
-                  </li>               
+                  <li><a href="https://sow.jkenergysolutions.net/" target="_blank"><i class="fa fa-clipboard"></i> SOW </a></li>               
                 </ul>
               </div>
             </div>
             <!-- /sidebar menu -->
 
             <!-- /menu footer buttons -->
+            <!--
             <div class="sidebar-footer hidden-small">
               <a data-toggle="tooltip" data-placement="top" title="Settings">
                 <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
@@ -75,6 +88,7 @@
                 <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
               </a>
             </div>
+            -->
             <!-- /menu footer buttons -->
           </div>
         </div>
