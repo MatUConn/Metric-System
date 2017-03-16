@@ -241,9 +241,6 @@ switch ($Query) {
 		$Q_Update_Info = "DELETE FROM ComprehensiveItems
 						WHERE Project_ID = '$PID'
 						AND Item_ID = '$Content'";
-		
-		"INSERT INTO ComprehensiveItems (Project_ID, Item_ID) 
-						VALUES('$PID', '$Content')";
         break;
 }
 $mysqli->query($Q_Update_Info);
