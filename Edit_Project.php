@@ -66,6 +66,12 @@ $Q_ComprehensiveType = "SELECT Finance_ID, DropDownText
 		AND DropDown = 'ComprehensiveType'
 		ORDER BY DropDownText";
 $R_ComprehensiveType = $mysqli->query($Q_ComprehensiveType);
+//This is for the chosen comprehensive items
+$Q_Comprehensives = "SELECT Item_ID
+		FROM ComprehensiveItems
+		WHERE Project_ID = $Project_ID
+		ORDER BY Item_ID DESC";
+$R_Comprehensives = $mysqli->query($Q_Comprehensives);
 //Users List Queries
 $Q_Users = "SELECT user_id, CONCAT(first_name, ' ', last_name) AS Name
 		FROM user
@@ -661,13 +667,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         <div class="col-md-6 col-sm-6 col-xs-12">
                           <select id="ComprehensiveList" name="ComprehensiveList" class="select2_multiple form-control" multiple="multiple" tabindex="-1" style="width: 100%">
 							<?php
-							while($Row_Comprehensive = $R_ComprehensiveType->fetch_array(MYSQLI_ASSOC)){ //This has row['program'], once I save it, I need to plug the proper source in
-								if ($row['program'] == $Row_Comprehensive['Finance_ID']) {
-									echo '<option value="' . $Row_Comprehensive['Finance_ID'] . '" selected="selected">' . $Row_Comprehensive['DropDownText'] . '</option>';
-								}
-								else {
-									echo '<option value="' . $Row_Comprehensive['Finance_ID'] . '">' . $Row_Comprehensive['DropDownText'] . '</option>';
-								}
+							while($ChosenComps = $R_Comprehensives->fetch_array(MYSQLI_ASSOC)) {
+								$ids_array[] = $ChosenComps['Item_ID'];
+							}
+							while($Row_Comprehensive = $R_ComprehensiveType->fetch_array(MYSQLI_ASSOC)){
+							  if (in_array($Row_Comprehensive['Finance_ID'], $ids_array)) {
+								echo '<option value="' . $Row_Comprehensive['Finance_ID'] . '" selected="selected">' . $Row_Comprehensive['DropDownText'] . '</option>';
+							  }
+							  else {
+								echo '<option value="' . $Row_Comprehensive['Finance_ID'] . '">' . $Row_Comprehensive['DropDownText'] . '</option>';
+							  }
 							}
 							?>
                           </select>
@@ -2417,8 +2426,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 		});
 	}
 	//Custom AJAX for the multiselect
-	$('#ComprehensiveList').change(function() {
-		
+	//When an item is selected
+	$('#ComprehensiveList').on("select2:select", function (e) {
+		var Content = e.params.data.id;
+		var ID = "ComprehensiveListAdd";
+		UpdateData(ID, Content);
+    });
+	//When an item is deselected
+	$('#ComprehensiveList').on('select2:unselect', function (e) {
+		var Content = e.params.data.id;
+		var ID = "ComprehensiveListDelete";
+		UpdateData(ID, Content);
 	});
 	</script>
 	<!-- /Ajax Submits -->

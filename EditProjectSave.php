@@ -1,4 +1,5 @@
 <?php
+//Am I proud of this mess of switch statements?  No.  No I'm not...I'll switch to something OO later on.  No pun intended.  
 // Config File Include
 require ('priv_includes/config.inc.php');
 // App Core Include
@@ -115,8 +116,11 @@ switch ($ID) {
         $ColumnName = "Comprehensive";
 		$Query = "PN";
         break;
-	case ComprehensiveList:
-		$Query = "CI";
+	case ComprehensiveListAdd:
+		$Query = "CA";
+        break;
+	case ComprehensiveListDelete:
+		$Query = "CD";
         break;
 	case TaxExempt:
         $ColumnName = "Tax_Exempt";
@@ -229,9 +233,14 @@ switch ($Query) {
 				WHERE project_ID = $PID
 				LIMIT 1";
         break;
-	case CI:
+	case CA:
 		$Q_Update_Info = "INSERT INTO ComprehensiveItems (Project_ID, Item_ID) 
 						VALUES('$PID', '$Content')";
+        break;
+	case CD:
+		$Q_Update_Info = "DELETE FROM ComprehensiveItems
+						WHERE Project_ID = '$PID'
+						AND Item_ID = '$Content'";
         break;
 }
 $mysqli->query($Q_Update_Info);
